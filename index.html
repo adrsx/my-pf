@@ -1004,10 +1004,10 @@ main{
         <div class="platforms-dropdown" id="platformsDropdown">
           <div class="dropdown-header">Working Platforms</div>
           <!-- Edit or add your platforms here -->
-          <a href="https://github.com/adrsx" target="git_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/adrsx" target="_blank" rel="noopener">GitHub</a>
           <a href="https://supabase.com/dashboard/org/hiyothxnrvmytwmupclb" target="_blank" rel="noopener">Supabase</a>
-          <a href="https://leetcode.com/u/code_by_adit/" target="leet_blank" rel="noopener">LeetCode</a>
-          <a href="https://www.hackerrank.com/profile/adityarajsinghy2" target="hacker_blank" rel="noopener">HackerRank</a>
+          <a href="https://leetcode.com/u/code_by_adit/" target="_blank" rel="noopener">LeetCode</a>
+          <a href="https://www.hackerrank.com/profile/adityarajsinghy2" target="_blank" rel="noopener">HackerRank</a>
         </div>
       </div>
 
@@ -1076,7 +1076,7 @@ main{
 
           <a
             class="instagram"
-            href="https://https:/www.instagram.com/it_ydv_aditya/"
+            href="https://www.instagram.com/it_ydv_aditya/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -1126,7 +1126,7 @@ main{
         <p>A C-based scientific calculator supporting basic arithmetic and advanced mathematical operations.</p>
         <p class="stack">⚒ Switch · while · math.h</p>
         <a
-          href="https://github.com/AdityaLogic/Scientific_Calculator"
+          href="https://github.com/adrsx/Scientific_Calculator"
           target="_blank"
           rel="noopener noreferrer"
         >↗ GitHub</a>
@@ -1262,6 +1262,8 @@ main{
         <input type="file" id="studyFileInput" multiple>
         <button class="btn" id="uploadStudyBtn" type="button">Upload file(s)</button>
         <p class="small">Allowed: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, ZIP, images and other study files.</p>
+         <p class="small" id="studyUploadStatus"></p>
+        <p class="small" style="opacity:.8">Upload requires an authenticated Supabase admin session and the Storage/Table policies configured for the <b>study-materials</b> bucket.</p>
       </div>
     </div>
   </div>
@@ -1392,7 +1394,22 @@ async function loadProblems(){
 }
 
 async function saveCode(item){
-  if(!currentUser || !supabaseClient){ openAuth(); toast("Admin login required to save code"); return false; }
+  if(!supabaseClient){ openAuth(); toast("Supabase is not configured"); return false; }
+
+  const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+  if(sessionError){
+    console.error("Session check error:", sessionError);
+    toast("Could not verify admin session");
+    return false;
+  }
+
+  currentUser = sessionData.session?.user || null;
+  if(!currentUser){
+    openAuth();
+    toast("Admin login required to save code");
+    return false;
+  }
+
   const language = String(item.language || currentLanguage || "Other").trim() || "Other";
   const payload = {language, title:String(item.title||"").trim(), summary:String(item.summary||""), code:String(item.code||""), link:String(item.link||"").trim()};
   if(!payload.title || !payload.code){ toast("Title and code are required"); return false; }
@@ -1409,7 +1426,17 @@ async function saveCode(item){
 }
 
 async function deleteCode(item){
-  if(!currentUser || !supabaseClient){ openAuth(); toast("Admin login required to delete code"); return false; }
+  if(!supabaseClient){ openAuth(); toast("Supabase is not configured"); return false; }
+
+  const { data: sessionData } = await supabaseClient.auth.getSession();
+  currentUser = sessionData.session?.user || null;
+
+  if(!currentUser){
+    openAuth();
+    toast("Admin login required to delete code");
+    return false;
+  }
+
   if(!item.id) return true;
   const {error}=await supabaseClient.from("code_library").delete().eq("id",item.id).eq("user_id",currentUser.id);
   if(error){ console.error("Supabase delete error:",error); toast("Delete failed: "+error.message); return false; }
@@ -1746,6 +1773,7 @@ function updateAuthUI(){
     $("loginBtn").textContent = "Refresh session";
     if(adminTools) adminTools.style.display = "block";
     if(uploadButton) uploadButton.disabled = false;
+    if($("studyUploadStatus")) $("studyUploadStatus").textContent = "Admin mode: uploads are enabled.";
   }else{
     $("authStatus").textContent = "Not logged in (Public Mode)";
     $("privateLoginBtn").textContent = "🔒 Admin Login";
@@ -1753,6 +1781,7 @@ function updateAuthUI(){
     $("loginBtn").textContent = "Login";
     if(adminTools) adminTools.style.display = "none";
     if(uploadButton) uploadButton.disabled = false;
+    if($("studyUploadStatus")) $("studyUploadStatus").textContent = "Login as admin to upload files.";
   }
 
   if($("studyModal")?.classList.contains("open")){
@@ -1876,17 +1905,49 @@ async function loadStudyMaterials(){
 function openStudy(){ $("studyModal").classList.add("open"); $("studyModal").setAttribute("aria-hidden","false"); loadStudyMaterials(); }
 function closeStudy(){ $("studyModal").classList.remove("open"); $("studyModal").setAttribute("aria-hidden","true"); }
 async function uploadStudyMaterial(){
-  if(!currentUser || !supabaseClient){
+  if(!supabaseClient){
+    openAuth();
+    toast("Supabase is not configured");
+    return;
+  }
+
+  // Get the current authenticated user directly from Supabase.
+  // This is important because the Storage and table RLS policies use auth.uid().
+  const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+
+  if(sessionError){
+    console.error("Session check error:", sessionError);
+    toast("Could not verify admin session");
+    return;
+  }
+
+  currentUser = sessionData.session?.user || null;
+
+  if(!currentUser){
     openAuth();
     toast("Admin login required to upload files");
     return;
   }
 
-  const files = Array.from($("studyFileInput").files || []);
+  const input = $("studyFileInput");
+  const files = Array.from(input.files || []);
+
   if(!files.length){
     toast("Choose one or more files first");
     return;
   }
+
+  // Refresh the session so the JWT used by Storage/PostgREST is current.
+  const { data: refreshData, error: refreshError } =
+    await supabaseClient.auth.refreshSession();
+
+  if(refreshError){
+    console.error("Session refresh error:", refreshError);
+    toast("Admin session expired. Please login again.");
+    return;
+  }
+
+  currentUser = refreshData.session?.user || currentUser;
 
   const uploadButton = $("uploadStudyBtn");
   uploadButton.disabled = true;
@@ -1894,13 +1955,33 @@ async function uploadStudyMaterial(){
 
   let uploaded = 0;
   let failed = 0;
+  const errors = [];
 
   try{
     for(const file of files){
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = `${currentUser.id}/${Date.now()}_${crypto.randomUUID()}_${safeName}`;
 
-      const {error: uploadError} = await supabaseClient.storage
+      if(!file || file.size <= 0){
+        failed++;
+        errors.push(`${file?.name || "File"}: empty file`);
+        continue;
+      }
+
+      const safeName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, "_")
+        .replace(/^_+/, "")
+        .slice(0, 180) || "study-file";
+
+      const randomId = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+      // IMPORTANT:
+      // The first folder must be the authenticated user's UUID because
+      // the storage.objects INSERT policy checks:
+      // (storage.foldername(name))[1] = auth.uid()::text
+      const path = `${currentUser.id}/${Date.now()}_${randomId}_${safeName}`;
+
+      const { error: uploadError } = await supabaseClient.storage
         .from(STUDY_BUCKET)
         .upload(path, file, {
           upsert: false,
@@ -1911,10 +1992,11 @@ async function uploadStudyMaterial(){
       if(uploadError){
         console.error("Study file upload error:", uploadError);
         failed++;
+        errors.push(`${file.name}: ${uploadError.message || "Storage upload failed"}`);
         continue;
       }
 
-      const {error: dbError} = await supabaseClient
+      const { error: dbError } = await supabaseClient
         .from("study_materials")
         .insert({
           file_name: file.name,
@@ -1925,20 +2007,37 @@ async function uploadStudyMaterial(){
 
       if(dbError){
         console.error("Study material database error:", dbError);
-        await supabaseClient.storage.from(STUDY_BUCKET).remove([path]);
+
+        // If the database insert fails, remove the uploaded Storage object
+        // so an orphaned file is not left behind.
+        const { error: removeError } =
+          await supabaseClient.storage.from(STUDY_BUCKET).remove([path]);
+
+        if(removeError){
+          console.warn("Could not remove orphaned file:", removeError);
+        }
+
         failed++;
+        errors.push(`${file.name}: ${dbError.message || "Database insert failed"}`);
         continue;
       }
 
       uploaded++;
     }
 
-    $("studyFileInput").value = "";
+    input.value = "";
     await loadStudyMaterials();
-    toast(`${uploaded} file${uploaded === 1 ? "" : "s"} uploaded${failed ? `, ${failed} failed` : " successfully"}`);
+
+    if(failed === 0){
+      toast(`${uploaded} file${uploaded === 1 ? "" : "s"} uploaded successfully`);
+    }else{
+      console.error("Study upload failures:", errors);
+      toast(`${uploaded} uploaded, ${failed} failed. Check the browser console for details.`);
+    }
+
   }catch(error){
     console.error("Unexpected study material error:", error);
-    toast("Some files could not be uploaded. Check Supabase settings.");
+    toast("Upload failed. Check Supabase Storage/table policies.");
   }finally{
     uploadButton.disabled = false;
     uploadButton.textContent = "Upload file(s)";
