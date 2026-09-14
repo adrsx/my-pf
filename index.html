@@ -943,6 +943,103 @@ main{
 .auth-message{min-height:18px;font-size:11px;color:#ff7a7a;margin:0}
 .auth-actions{display:flex;gap:8px}
 
+/* ===== RESPONSIVE HEADER + ADMIN-ONLY CONTROLS ===== */
+.logo{
+  position:relative;
+  isolation:isolate;
+  display:inline-grid;
+  place-items:center;
+  min-width:44px;
+  min-height:44px;
+  text-shadow:0 0 8px var(--accent), 0 0 20px var(--glow), 0 0 34px var(--glow);
+  transition:transform .25s ease, text-shadow .25s ease;
+}
+.logo::before{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border-radius:50%;
+  background:radial-gradient(circle, var(--glow) 0%, transparent 68%);
+  filter:blur(7px);
+  z-index:-1;
+  opacity:.95;
+}
+.logo:hover{
+  transform:translateY(-1px) scale(1.04);
+  text-shadow:0 0 10px var(--accent), 0 0 26px var(--glow), 0 0 42px var(--glow);
+}
+
+.admin-only{display:none!important;}
+body.admin-mode .admin-only{display:inline-flex!important;}
+body.admin-mode .admin-only-block{display:block!important;}
+
+/* Keep every header control usable without horizontal overflow. */
+.site-header{
+  flex-wrap:wrap;
+}
+.navigation{
+  min-width:0;
+}
+.navigation a{
+  white-space:nowrap;
+}
+.private-login{
+  flex:0 1 auto;
+}
+
+@media(max-width:900px){
+  .site-header{
+    width:min(100% - 24px,1050px);
+    gap:9px;
+  }
+  .navigation{
+    order:10;
+    flex-basis:100%;
+    overflow-x:auto;
+    scrollbar-width:thin;
+    justify-content:flex-start;
+  }
+  .navigation a{flex:0 0 auto;}
+}
+
+@media(max-width:600px){
+  .site-header{
+    width:calc(100% - 20px);
+    min-height:0;
+    padding:10px 0;
+    gap:8px;
+  }
+  .brand-group{gap:7px;}
+  .logo{font-size:20px;min-width:38px;min-height:38px;}
+  .menu-toggle{width:22px;height:17px;}
+  .theme-toggle{width:38px;height:38px;}
+  .download,.private-login{
+    padding:8px 10px;
+    font-size:11px;
+  }
+  .navigation{
+    width:100%;
+    padding:3px;
+    gap:2px;
+  }
+  .navigation a{
+    padding:8px 11px;
+    font-size:11px;
+  }
+}
+
+@media(max-width:430px){
+  .site-header{gap:6px;}
+  .download{font-size:0;}
+  .download::after{content:"CV ↓";font-size:11px;}
+  .private-login{font-size:0;}
+  #studyMaterialBtn::after{content:"📚 Study";font-size:11px;}
+  #privateLoginBtn::after{content:"🔒 Admin";font-size:11px;}
+  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
+  .theme-toggle{width:36px;height:36px;}
+  .navigation a{padding:8px 9px;font-size:10px;}
+}
+
 @media(max-width:820px){
   .skills-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -986,7 +1083,191 @@ main{
     grid-column:auto;
   }
 }
+
+/* ===== FINAL MOBILE HEADER + STUDY MATERIAL FIX ===== */
+.study-admin-tools-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#studyFileInput{
+  min-width:0;
+  max-width:100%;
+}
+#studyAdminTools .small{margin:8px 0 0;}
+
+@media(max-width:600px){
+  /* Keep the main action buttons together on one compact row. */
+  .site-header{
+    display:grid;
+    grid-template-columns:auto auto 1fr auto auto auto;
+    align-items:center;
+    gap:5px;
+    width:calc(100% - 12px);
+    padding:8px 0;
+  }
+  .brand-group{display:contents;}
+  .menu-container{grid-column:1;}
+  .logo{grid-column:2;font-size:18px;min-width:34px;min-height:34px;}
+  .theme-toggle{grid-column:3;justify-self:end;width:34px;height:34px;}
+  .download,.private-login{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:0;
+    height:34px;
+    padding:6px 7px;
+    font-size:9px;
+    line-height:1;
+    white-space:nowrap;
+  }
+  .download{grid-column:4;}
+  #studyMaterialBtn{grid-column:5;}
+  #privateLoginBtn{grid-column:6;}
+
+  /* Navigation gets its own full-width row instead of squeezing the buttons. */
+  .navigation{
+    grid-column:1 / -1;
+    grid-row:2;
+    order:initial;
+    width:100%;
+    min-width:0;
+    overflow-x:auto;
+    justify-content:space-between;
+  }
+  .navigation a{flex:1 0 auto;min-width:0;padding:7px 8px;font-size:10px;text-align:center;}
+}
+
+@media(max-width:390px){
+  .site-header{grid-template-columns:auto auto 1fr auto auto auto;gap:3px;width:calc(100% - 8px);}
+  .logo{font-size:17px;min-width:31px;min-height:32px;}
+  .theme-toggle{width:32px;height:32px;font-size:13px;}
+  .download,.private-login{height:32px;padding:5px 5px;font-size:8px;}
+  #studyMaterialBtn::after,#privateLoginBtn::after{font-size:8px;}
+}
+
+@media(max-width:350px){
+  .download{font-size:0;}
+  .download::after{content:"CV";font-size:9px;}
+  #studyMaterialBtn{font-size:0;}
+  #studyMaterialBtn::after{content:"📚 Study";font-size:9px;}
+  #privateLoginBtn{font-size:0;}
+  #privateLoginBtn::after{content:"🔒 Admin";font-size:9px;}
+  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
+}
+
+@media(max-width:600px){
+  /* Study Material modal: upload controls stay usable on small screens. */
+  #studyAdminTools{padding:10px 0 2px;}
+  #studyAdminTools > input[type="file"]{
+    display:block;
+    width:100%;
+    box-sizing:border-box;
+    font-size:11px;
+    margin-bottom:8px;
+  }
+  #uploadStudyBtn{width:100%;}
+  #studyList .problem{padding:11px;}
+  #studyList .actions{display:flex;flex-wrap:wrap;gap:7px;}
+  #studyList .actions .btn{flex:1 1 140px;text-align:center;}
+  .dialog{width:min(100% - 16px,700px);max-height:90vh;overflow:auto;}
+}
 </style>
+<style>
+/* ===== FINAL MOBILE HEADER OVERLAP FIX ===== */
+@media (max-width: 600px){
+  .site-header{
+    width:calc(100% - 8px);
+    max-width:none;
+    display:grid;
+    grid-template-columns:28px 38px 34px minmax(54px,1fr) minmax(54px,1fr) minmax(42px,auto);
+    align-items:center;
+    gap:4px;
+    padding:7px 0;
+    box-sizing:border-box;
+  }
+
+  .brand-group{display:contents;}
+  .menu-container{grid-column:1;min-width:0;}
+  .logo{
+    grid-column:2;
+    width:34px;
+    min-width:34px;
+    min-height:34px;
+    height:34px;
+    font-size:17px;
+    box-sizing:border-box;
+  }
+  .theme-toggle{
+    grid-column:3;
+    width:32px;
+    height:32px;
+    min-width:32px;
+    padding:0;
+  }
+
+  /* Never let the button text spill into another button. */
+  .download,
+  .private-login{
+    min-width:0;
+    width:100%;
+    max-width:100%;
+    height:32px;
+    box-sizing:border-box;
+    padding:5px 4px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:10px;
+    line-height:1;
+  }
+  .download{grid-column:6;}
+  #studyMaterialBtn{grid-column:4;}
+  #privateLoginBtn{grid-column:5;}
+
+  .navigation{
+    grid-column:1 / -1;
+    grid-row:2;
+    width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    overflow-x:auto;
+  }
+}
+
+@media (max-width:430px){
+  .site-header{
+    grid-template-columns:26px 34px 30px minmax(50px,1fr) minmax(50px,1fr) 40px;
+    gap:3px;
+  }
+  .logo{width:32px;min-width:32px;height:32px;min-height:32px;font-size:16px;}
+  .theme-toggle{width:29px;height:29px;min-width:29px;font-size:12px;}
+
+  /* Short labels prevent long names from overlapping on narrow phones. */
+  .download{font-size:0;}
+  .download::after{content:"CV";font-size:10px;}
+  #studyMaterialBtn{font-size:0;}
+  #studyMaterialBtn::after{content:"📚 Study";font-size:9px;}
+  #privateLoginBtn{font-size:0;}
+  #privateLoginBtn::after{content:"🔒 Admin";font-size:9px;}
+  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
+}
+
+@media (max-width:350px){
+  .site-header{
+    grid-template-columns:24px 31px 28px minmax(46px,1fr) minmax(46px,1fr) 34px;
+    gap:2px;
+  }
+  .logo{width:30px;min-width:30px;height:30px;min-height:30px;font-size:15px;}
+  .theme-toggle{width:27px;height:27px;min-width:27px;}
+  #studyMaterialBtn::after{content:"📚";font-size:12px;}
+  #privateLoginBtn::after{content:"🔒";font-size:12px;}
+  body.admin-mode #privateLoginBtn::after{content:"🔓";}
+  .download::after{font-size:9px;}
+}
+</style>
+
 </head>
 
 <body>
@@ -1200,7 +1481,7 @@ main{
 
     <div class="modal-body">
       <div class="toolbar">
-        <div class="toolbar-left">
+        <div class="toolbar-left admin-only-block" style="display:none">
           <button class="btn" id="addBtn">＋ Add new code</button>
           <button class="btn secondary" id="exportBtn">Export</button>
           <button class="btn secondary" id="importBtn">Import</button>
@@ -1258,7 +1539,7 @@ main{
     <div class="modal-body">
       <p class="summary">Public files uploaded by the admin. You can view or download them.</p>
       <div id="studyList"></div>
-      <div id="studyAdminTools" style="display:none;margin-top:18px">
+      <div id="studyAdminTools" class="admin-only-block" style="display:none;margin-top:18px">
         <input type="file" id="studyFileInput" multiple>
         <button class="btn" id="uploadStudyBtn" type="button">Upload file(s)</button>
         <p class="small">Allowed: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, ZIP, images and other study files.</p>
@@ -1536,7 +1817,7 @@ function renderProblems(){
     wrap.className = "code-box";
 
     const copy = document.createElement("button");
-    copy.className = "btn copy";
+    copy.className = "btn copy admin-only";
     copy.textContent = "Copy";
     copy.onclick = async e => {
       e.stopPropagation();
@@ -1559,7 +1840,7 @@ function renderProblems(){
     actions.className = "actions";
 
     const edit = document.createElement("button");
-    edit.className = "btn small";
+    edit.className = "btn small admin-only";
     edit.textContent = "Edit";
     edit.onclick = () => {
       if(!currentUser){
@@ -1571,7 +1852,7 @@ function renderProblems(){
     };
 
     const del = document.createElement("button");
-    del.className = "btn secondary small";
+    del.className = "btn secondary small admin-only";
     del.textContent = "Delete";
     del.onclick = async () => {
       if(!currentUser){
@@ -1765,6 +2046,7 @@ function setAuthMessage(msg){
 function updateAuthUI(){
   const adminTools = $("studyAdminTools");
   const uploadButton = $("uploadStudyBtn");
+  document.body.classList.toggle("admin-mode", !!currentUser);
 
   if(currentUser){
     $("authStatus").textContent = "Logged in as " + (currentUser.email || "admin");
@@ -1888,22 +2170,120 @@ async function loadStudyMaterials(){
   if(adminTools) adminTools.style.display = currentUser ? "block" : "none";
   list.innerHTML='<div class="empty">Loading study material...</div>';
   if(!supabaseClient){ list.innerHTML='<div class="empty">Supabase is not configured.</div>'; return; }
-  const {data,error}=await supabaseClient.from("study_materials").select("id,file_name,file_path,file_size,created_at").order("created_at",{ascending:false});
-  if(error){ console.error("Study material load error:",error); list.innerHTML='<div class="empty">No study material available yet.</div>'; return; }
+
+  const {data,error}=await supabaseClient
+    .from("study_materials")
+    .select("id,file_name,file_path,file_size,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error("Study material load error:",error);
+    list.innerHTML='<div class="empty">No study material available yet.</div>';
+    return;
+  }
+
   list.innerHTML="";
-  if(!data?.length){ list.innerHTML='<div class="empty">No study material uploaded yet.</div>'; return; }
+  if(!data?.length){
+    list.innerHTML='<div class="empty">No study material uploaded yet.</div>';
+    return;
+  }
+
   data.forEach(file=>{
     const {data:urlData}=supabaseClient.storage.from(STUDY_BUCKET).getPublicUrl(file.file_path);
-    const row=document.createElement("div"); row.className="problem";
-    const name=document.createElement("strong"); name.textContent=file.file_name;
-    const info=document.createElement("p"); info.className="summary"; info.textContent=file.file_size?`${Math.ceil(file.file_size/1024)} KB`:"Study file";
-    const a=document.createElement("a"); a.href=urlData.publicUrl; a.target="_blank"; a.rel="noopener noreferrer"; a.download=file.file_name; a.className="btn small"; a.textContent="View / Download";
-    row.append(name,info,a); list.appendChild(row);
+    const row=document.createElement("div");
+    row.className="problem";
+
+    const name=document.createElement("strong");
+    name.textContent=file.file_name;
+
+    const info=document.createElement("p");
+    info.className="summary";
+    info.textContent=file.file_size ? `${Math.ceil(file.file_size/1024)} KB` : "Study file";
+
+    const actions=document.createElement("div");
+    actions.className="actions";
+
+    const a=document.createElement("a");
+    a.href=urlData.publicUrl;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+    a.download=file.file_name;
+    a.className="btn small";
+    a.textContent="View / Download";
+    actions.appendChild(a);
+
+    // Delete is visible and usable only after admin authentication.
+    if(currentUser){
+      const del=document.createElement("button");
+      del.type="button";
+      del.className="btn secondary small";
+      del.textContent="Delete";
+      del.onclick=()=>deleteStudyMaterial(file);
+      actions.appendChild(del);
+    }
+
+    row.append(name,info,actions);
+    list.appendChild(row);
   });
-  if($("studyAdminTools")) $("studyAdminTools").style.display = currentUser ? "block" : "none";
 }
-function openStudy(){ $("studyModal").classList.add("open"); $("studyModal").setAttribute("aria-hidden","false"); loadStudyMaterials(); }
-function closeStudy(){ $("studyModal").classList.remove("open"); $("studyModal").setAttribute("aria-hidden","true"); }
+
+async function deleteStudyMaterial(file){
+  if(!supabaseClient){
+    openAuth();
+    toast("Supabase is not configured");
+    return;
+  }
+
+  const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+  if(sessionError || !sessionData.session?.user){
+    currentUser=null;
+    updateAuthUI();
+    openAuth();
+    toast("Admin login required to delete files");
+    return;
+  }
+
+  currentUser=sessionData.session.user;
+  if(!confirm(`Delete "${file.file_name}" permanently?`)) return;
+
+  try{
+    const {error:storageError}=await supabaseClient
+      .storage.from(STUDY_BUCKET).remove([file.file_path]);
+
+    if(storageError){
+      console.error("Study file delete error:",storageError);
+      toast("File delete failed: "+storageError.message);
+      return;
+    }
+
+    const {error:dbError}=await supabaseClient
+      .from("study_materials")
+      .delete()
+      .eq("id",file.id);
+
+    if(dbError){
+      console.error("Study material record delete error:",dbError);
+      toast("Database record delete failed: "+dbError.message);
+      return;
+    }
+
+    await loadStudyMaterials();
+    toast("Study material deleted");
+  }catch(error){
+    console.error("Unexpected study material delete error:",error);
+    toast("Delete failed. Check Supabase policies.");
+  }
+}
+
+function openStudy(){
+  $("studyModal").classList.add("open");
+  $("studyModal").setAttribute("aria-hidden","false");
+  loadStudyMaterials();
+}
+function closeStudy(){
+  $("studyModal").classList.remove("open");
+  $("studyModal").setAttribute("aria-hidden","true");
+}
 async function uploadStudyMaterial(){
   if(!supabaseClient){
     openAuth();
