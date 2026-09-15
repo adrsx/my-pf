@@ -943,103 +943,6 @@ main{
 .auth-message{min-height:18px;font-size:11px;color:#ff7a7a;margin:0}
 .auth-actions{display:flex;gap:8px}
 
-/* ===== RESPONSIVE HEADER + ADMIN-ONLY CONTROLS ===== */
-.logo{
-  position:relative;
-  isolation:isolate;
-  display:inline-grid;
-  place-items:center;
-  min-width:44px;
-  min-height:44px;
-  text-shadow:0 0 8px var(--accent), 0 0 20px var(--glow), 0 0 34px var(--glow);
-  transition:transform .25s ease, text-shadow .25s ease;
-}
-.logo::before{
-  content:"";
-  position:absolute;
-  inset:3px;
-  border-radius:50%;
-  background:radial-gradient(circle, var(--glow) 0%, transparent 68%);
-  filter:blur(7px);
-  z-index:-1;
-  opacity:.95;
-}
-.logo:hover{
-  transform:translateY(-1px) scale(1.04);
-  text-shadow:0 0 10px var(--accent), 0 0 26px var(--glow), 0 0 42px var(--glow);
-}
-
-.admin-only{display:none!important;}
-body.admin-mode .admin-only{display:inline-flex!important;}
-body.admin-mode .admin-only-block{display:block!important;}
-
-/* Keep every header control usable without horizontal overflow. */
-.site-header{
-  flex-wrap:wrap;
-}
-.navigation{
-  min-width:0;
-}
-.navigation a{
-  white-space:nowrap;
-}
-.private-login{
-  flex:0 1 auto;
-}
-
-@media(max-width:900px){
-  .site-header{
-    width:min(100% - 24px,1050px);
-    gap:9px;
-  }
-  .navigation{
-    order:10;
-    flex-basis:100%;
-    overflow-x:auto;
-    scrollbar-width:thin;
-    justify-content:flex-start;
-  }
-  .navigation a{flex:0 0 auto;}
-}
-
-@media(max-width:600px){
-  .site-header{
-    width:calc(100% - 20px);
-    min-height:0;
-    padding:10px 0;
-    gap:8px;
-  }
-  .brand-group{gap:7px;}
-  .logo{font-size:20px;min-width:38px;min-height:38px;}
-  .menu-toggle{width:22px;height:17px;}
-  .theme-toggle{width:38px;height:38px;}
-  .download,.private-login{
-    padding:8px 10px;
-    font-size:11px;
-  }
-  .navigation{
-    width:100%;
-    padding:3px;
-    gap:2px;
-  }
-  .navigation a{
-    padding:8px 11px;
-    font-size:11px;
-  }
-}
-
-@media(max-width:430px){
-  .site-header{gap:6px;}
-  .download{font-size:0;}
-  .download::after{content:"CV ↓";font-size:11px;}
-  .private-login{font-size:0;}
-  #studyMaterialBtn::after{content:"📚 Study";font-size:11px;}
-  #privateLoginBtn::after{content:"🔒 Admin";font-size:11px;}
-  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
-  .theme-toggle{width:36px;height:36px;}
-  .navigation a{padding:8px 9px;font-size:10px;}
-}
-
 @media(max-width:820px){
   .skills-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1083,191 +986,7 @@ body.admin-mode .admin-only-block{display:block!important;}
     grid-column:auto;
   }
 }
-
-/* ===== FINAL MOBILE HEADER + STUDY MATERIAL FIX ===== */
-.study-admin-tools-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-#studyFileInput{
-  min-width:0;
-  max-width:100%;
-}
-#studyAdminTools .small{margin:8px 0 0;}
-
-@media(max-width:600px){
-  /* Keep the main action buttons together on one compact row. */
-  .site-header{
-    display:grid;
-    grid-template-columns:auto auto 1fr auto auto auto;
-    align-items:center;
-    gap:5px;
-    width:calc(100% - 12px);
-    padding:8px 0;
-  }
-  .brand-group{display:contents;}
-  .menu-container{grid-column:1;}
-  .logo{grid-column:2;font-size:18px;min-width:34px;min-height:34px;}
-  .theme-toggle{grid-column:3;justify-self:end;width:34px;height:34px;}
-  .download,.private-login{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:0;
-    height:34px;
-    padding:6px 7px;
-    font-size:9px;
-    line-height:1;
-    white-space:nowrap;
-  }
-  .download{grid-column:4;}
-  #studyMaterialBtn{grid-column:5;}
-  #privateLoginBtn{grid-column:6;}
-
-  /* Navigation gets its own full-width row instead of squeezing the buttons. */
-  .navigation{
-    grid-column:1 / -1;
-    grid-row:2;
-    order:initial;
-    width:100%;
-    min-width:0;
-    overflow-x:auto;
-    justify-content:space-between;
-  }
-  .navigation a{flex:1 0 auto;min-width:0;padding:7px 8px;font-size:10px;text-align:center;}
-}
-
-@media(max-width:390px){
-  .site-header{grid-template-columns:auto auto 1fr auto auto auto;gap:3px;width:calc(100% - 8px);}
-  .logo{font-size:17px;min-width:31px;min-height:32px;}
-  .theme-toggle{width:32px;height:32px;font-size:13px;}
-  .download,.private-login{height:32px;padding:5px 5px;font-size:8px;}
-  #studyMaterialBtn::after,#privateLoginBtn::after{font-size:8px;}
-}
-
-@media(max-width:350px){
-  .download{font-size:0;}
-  .download::after{content:"CV";font-size:9px;}
-  #studyMaterialBtn{font-size:0;}
-  #studyMaterialBtn::after{content:"📚 Study";font-size:9px;}
-  #privateLoginBtn{font-size:0;}
-  #privateLoginBtn::after{content:"🔒 Admin";font-size:9px;}
-  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
-}
-
-@media(max-width:600px){
-  /* Study Material modal: upload controls stay usable on small screens. */
-  #studyAdminTools{padding:10px 0 2px;}
-  #studyAdminTools > input[type="file"]{
-    display:block;
-    width:100%;
-    box-sizing:border-box;
-    font-size:11px;
-    margin-bottom:8px;
-  }
-  #uploadStudyBtn{width:100%;}
-  #studyList .problem{padding:11px;}
-  #studyList .actions{display:flex;flex-wrap:wrap;gap:7px;}
-  #studyList .actions .btn{flex:1 1 140px;text-align:center;}
-  .dialog{width:min(100% - 16px,700px);max-height:90vh;overflow:auto;}
-}
 </style>
-<style>
-/* ===== FINAL MOBILE HEADER OVERLAP FIX ===== */
-@media (max-width: 600px){
-  .site-header{
-    width:calc(100% - 8px);
-    max-width:none;
-    display:grid;
-    grid-template-columns:28px 38px 34px minmax(54px,1fr) minmax(54px,1fr) minmax(42px,auto);
-    align-items:center;
-    gap:4px;
-    padding:7px 0;
-    box-sizing:border-box;
-  }
-
-  .brand-group{display:contents;}
-  .menu-container{grid-column:1;min-width:0;}
-  .logo{
-    grid-column:2;
-    width:34px;
-    min-width:34px;
-    min-height:34px;
-    height:34px;
-    font-size:17px;
-    box-sizing:border-box;
-  }
-  .theme-toggle{
-    grid-column:3;
-    width:32px;
-    height:32px;
-    min-width:32px;
-    padding:0;
-  }
-
-  /* Never let the button text spill into another button. */
-  .download,
-  .private-login{
-    min-width:0;
-    width:100%;
-    max-width:100%;
-    height:32px;
-    box-sizing:border-box;
-    padding:5px 4px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    font-size:10px;
-    line-height:1;
-  }
-  .download{grid-column:6;}
-  #studyMaterialBtn{grid-column:4;}
-  #privateLoginBtn{grid-column:5;}
-
-  .navigation{
-    grid-column:1 / -1;
-    grid-row:2;
-    width:100%;
-    min-width:0;
-    box-sizing:border-box;
-    overflow-x:auto;
-  }
-}
-
-@media (max-width:430px){
-  .site-header{
-    grid-template-columns:26px 34px 30px minmax(50px,1fr) minmax(50px,1fr) 40px;
-    gap:3px;
-  }
-  .logo{width:32px;min-width:32px;height:32px;min-height:32px;font-size:16px;}
-  .theme-toggle{width:29px;height:29px;min-width:29px;font-size:12px;}
-
-  /* Short labels prevent long names from overlapping on narrow phones. */
-  .download{font-size:0;}
-  .download::after{content:"CV";font-size:10px;}
-  #studyMaterialBtn{font-size:0;}
-  #studyMaterialBtn::after{content:"📚 Study";font-size:9px;}
-  #privateLoginBtn{font-size:0;}
-  #privateLoginBtn::after{content:"🔒 Admin";font-size:9px;}
-  body.admin-mode #privateLoginBtn::after{content:"🔓 Admin";}
-}
-
-@media (max-width:350px){
-  .site-header{
-    grid-template-columns:24px 31px 28px minmax(46px,1fr) minmax(46px,1fr) 34px;
-    gap:2px;
-  }
-  .logo{width:30px;min-width:30px;height:30px;min-height:30px;font-size:15px;}
-  .theme-toggle{width:27px;height:27px;min-width:27px;}
-  #studyMaterialBtn::after{content:"📚";font-size:12px;}
-  #privateLoginBtn::after{content:"🔒";font-size:12px;}
-  body.admin-mode #privateLoginBtn::after{content:"🔓";}
-  .download::after{font-size:9px;}
-}
-</style>
-
 </head>
 
 <body>
@@ -1285,10 +1004,10 @@ body.admin-mode .admin-only-block{display:block!important;}
         <div class="platforms-dropdown" id="platformsDropdown">
           <div class="dropdown-header">Working Platforms</div>
           <!-- Edit or add your platforms here -->
-          <a href="https://github.com/adrsx" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/AdityaLogic" target="git_blank" rel="noopener">GitHub</a>
           <a href="https://supabase.com/dashboard/org/hiyothxnrvmytwmupclb" target="_blank" rel="noopener">Supabase</a>
-          <a href="https://leetcode.com/u/code_by_adit/" target="_blank" rel="noopener">LeetCode</a>
-          <a href="https://www.hackerrank.com/profile/adityarajsinghy2" target="_blank" rel="noopener">HackerRank</a>
+          <a href="https://leetcode.com/u/code_by_adit/" target="leet_blank" rel="noopener">LeetCode</a>
+          <a href="https://www.hackerrank.com/profile/adityarajsinghy2" target="hacker_blank" rel="noopener">HackerRank</a>
         </div>
       </div>
 
@@ -1335,7 +1054,7 @@ body.admin-mode .admin-only-block{display:block!important;}
 
         <div class="social">
           <a
-            href="https://github.com/adrsx"
+            href="https://github.com/AdityaLogic"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
@@ -1357,7 +1076,7 @@ body.admin-mode .admin-only-block{display:block!important;}
 
           <a
             class="instagram"
-            href="https://www.instagram.com/it_ydv_aditya/"
+            href="https://https:/www.instagram.com/it_ydv_aditya/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -1407,7 +1126,7 @@ body.admin-mode .admin-only-block{display:block!important;}
         <p>A C-based scientific calculator supporting basic arithmetic and advanced mathematical operations.</p>
         <p class="stack">⚒ Switch · while · math.h</p>
         <a
-          href="https://github.com/adrsx/Scientific_Calculator"
+          href="https://github.com/AdityaLogic/Scientific_Calculator"
           target="_blank"
           rel="noopener noreferrer"
         >↗ GitHub</a>
@@ -1481,7 +1200,7 @@ body.admin-mode .admin-only-block{display:block!important;}
 
     <div class="modal-body">
       <div class="toolbar">
-        <div class="toolbar-left admin-only-block" style="display:none">
+        <div class="toolbar-left">
           <button class="btn" id="addBtn">＋ Add new code</button>
           <button class="btn secondary" id="exportBtn">Export</button>
           <button class="btn secondary" id="importBtn">Import</button>
@@ -1539,12 +1258,10 @@ body.admin-mode .admin-only-block{display:block!important;}
     <div class="modal-body">
       <p class="summary">Public files uploaded by the admin. You can view or download them.</p>
       <div id="studyList"></div>
-      <div id="studyAdminTools" class="admin-only-block" style="display:none;margin-top:18px">
+      <div id="studyAdminTools" style="display:none;margin-top:18px">
         <input type="file" id="studyFileInput" multiple>
         <button class="btn" id="uploadStudyBtn" type="button">Upload file(s)</button>
         <p class="small">Allowed: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, ZIP, images and other study files.</p>
-         <p class="small" id="studyUploadStatus"></p>
-        <p class="small" style="opacity:.8">Upload requires an authenticated Supabase admin session and the Storage/Table policies configured for the <b>study-materials</b> bucket.</p>
       </div>
     </div>
   </div>
@@ -1675,22 +1392,7 @@ async function loadProblems(){
 }
 
 async function saveCode(item){
-  if(!supabaseClient){ openAuth(); toast("Supabase is not configured"); return false; }
-
-  const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
-  if(sessionError){
-    console.error("Session check error:", sessionError);
-    toast("Could not verify admin session");
-    return false;
-  }
-
-  currentUser = sessionData.session?.user || null;
-  if(!currentUser){
-    openAuth();
-    toast("Admin login required to save code");
-    return false;
-  }
-
+  if(!currentUser || !supabaseClient){ openAuth(); toast("Admin login required to save code"); return false; }
   const language = String(item.language || currentLanguage || "Other").trim() || "Other";
   const payload = {language, title:String(item.title||"").trim(), summary:String(item.summary||""), code:String(item.code||""), link:String(item.link||"").trim()};
   if(!payload.title || !payload.code){ toast("Title and code are required"); return false; }
@@ -1707,17 +1409,7 @@ async function saveCode(item){
 }
 
 async function deleteCode(item){
-  if(!supabaseClient){ openAuth(); toast("Supabase is not configured"); return false; }
-
-  const { data: sessionData } = await supabaseClient.auth.getSession();
-  currentUser = sessionData.session?.user || null;
-
-  if(!currentUser){
-    openAuth();
-    toast("Admin login required to delete code");
-    return false;
-  }
-
+  if(!currentUser || !supabaseClient){ openAuth(); toast("Admin login required to delete code"); return false; }
   if(!item.id) return true;
   const {error}=await supabaseClient.from("code_library").delete().eq("id",item.id).eq("user_id",currentUser.id);
   if(error){ console.error("Supabase delete error:",error); toast("Delete failed: "+error.message); return false; }
@@ -1817,7 +1509,7 @@ function renderProblems(){
     wrap.className = "code-box";
 
     const copy = document.createElement("button");
-    copy.className = "btn copy admin-only";
+    copy.className = "btn copy";
     copy.textContent = "Copy";
     copy.onclick = async e => {
       e.stopPropagation();
@@ -1840,7 +1532,7 @@ function renderProblems(){
     actions.className = "actions";
 
     const edit = document.createElement("button");
-    edit.className = "btn small admin-only";
+    edit.className = "btn small";
     edit.textContent = "Edit";
     edit.onclick = () => {
       if(!currentUser){
@@ -1852,7 +1544,7 @@ function renderProblems(){
     };
 
     const del = document.createElement("button");
-    del.className = "btn secondary small admin-only";
+    del.className = "btn secondary small";
     del.textContent = "Delete";
     del.onclick = async () => {
       if(!currentUser){
@@ -2046,7 +1738,6 @@ function setAuthMessage(msg){
 function updateAuthUI(){
   const adminTools = $("studyAdminTools");
   const uploadButton = $("uploadStudyBtn");
-  document.body.classList.toggle("admin-mode", !!currentUser);
 
   if(currentUser){
     $("authStatus").textContent = "Logged in as " + (currentUser.email || "admin");
@@ -2055,7 +1746,6 @@ function updateAuthUI(){
     $("loginBtn").textContent = "Refresh session";
     if(adminTools) adminTools.style.display = "block";
     if(uploadButton) uploadButton.disabled = false;
-    if($("studyUploadStatus")) $("studyUploadStatus").textContent = "Admin mode: uploads are enabled.";
   }else{
     $("authStatus").textContent = "Not logged in (Public Mode)";
     $("privateLoginBtn").textContent = "🔒 Admin Login";
@@ -2063,7 +1753,6 @@ function updateAuthUI(){
     $("loginBtn").textContent = "Login";
     if(adminTools) adminTools.style.display = "none";
     if(uploadButton) uploadButton.disabled = false;
-    if($("studyUploadStatus")) $("studyUploadStatus").textContent = "Login as admin to upload files.";
   }
 
   if($("studyModal")?.classList.contains("open")){
@@ -2165,169 +1854,89 @@ $("themeToggle").onclick = () => {
 ========================================= */
 const STUDY_BUCKET = "study-materials";
 async function loadStudyMaterials(){
-  const list=$("studyList");
-  const adminTools=$("studyAdminTools");
-  if(adminTools) adminTools.style.display = currentUser ? "block" : "none";
-  list.innerHTML='<div class="empty">Loading study material...</div>';
-  if(!supabaseClient){ list.innerHTML='<div class="empty">Supabase is not configured.</div>'; return; }
+  const list = $("studyList");
+  const adminTools = $("studyAdminTools");
 
-  const {data,error}=await supabaseClient
+  if(adminTools) adminTools.style.display = currentUser ? "block" : "none";
+  if(!list) return;
+
+  list.innerHTML = '<div class="empty">Loading study material...</div>';
+
+  if(!supabaseClient){
+    list.innerHTML = '<div class="empty">Supabase is not configured.</div>';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
     .from("study_materials")
     .select("id,file_name,file_path,file_size,created_at")
-    .order("created_at",{ascending:false});
+    .order("created_at", { ascending: false });
 
   if(error){
-    console.error("Study material load error:",error);
-    list.innerHTML='<div class="empty">No study material available yet.</div>';
+    console.error("Study material load error:", error);
+    list.innerHTML = `
+      <div class="empty" style="color:#ff7777;">
+        Unable to load study materials.<br>
+        <small>${escapeHtml(error.message || "Database read permission error")}</small>
+      </div>`;
     return;
   }
 
-  list.innerHTML="";
-  if(!data?.length){
-    list.innerHTML='<div class="empty">No study material uploaded yet.</div>';
+  list.innerHTML = "";
+
+  if(!data || data.length === 0){
+    list.innerHTML = '<div class="empty">No study material uploaded yet.</div>';
     return;
   }
 
-  data.forEach(file=>{
-    const {data:urlData}=supabaseClient.storage.from(STUDY_BUCKET).getPublicUrl(file.file_path);
-    const row=document.createElement("div");
-    row.className="problem";
+  data.forEach(file => {
+    const { data: urlData } = supabaseClient
+      .storage
+      .from(STUDY_BUCKET)
+      .getPublicUrl(file.file_path);
 
-    const name=document.createElement("strong");
-    name.textContent=file.file_name;
+    const row = document.createElement("div");
+    row.className = "problem";
 
-    const info=document.createElement("p");
-    info.className="summary";
-    info.textContent=file.file_size ? `${Math.ceil(file.file_size/1024)} KB` : "Study file";
+    const name = document.createElement("strong");
+    name.textContent = file.file_name || "Untitled file";
 
-    const actions=document.createElement("div");
-    actions.className="actions";
+    const info = document.createElement("p");
+    info.className = "summary";
+    info.textContent = file.file_size
+      ? `${Math.ceil(file.file_size / 1024)} KB`
+      : "Study file";
 
-    const a=document.createElement("a");
-    a.href=urlData.publicUrl;
-    a.target="_blank";
-    a.rel="noopener noreferrer";
-    a.download=file.file_name;
-    a.className="btn small";
-    a.textContent="View / Download";
-    actions.appendChild(a);
+    const a = document.createElement("a");
+    a.href = urlData.publicUrl;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.download = file.file_name || "study-material";
+    a.className = "btn small";
+    a.textContent = "View / Download";
 
-    // Delete is visible and usable only after admin authentication.
-    if(currentUser){
-      const del=document.createElement("button");
-      del.type="button";
-      del.className="btn secondary small";
-      del.textContent="Delete";
-      del.onclick=()=>deleteStudyMaterial(file);
-      actions.appendChild(del);
-    }
-
-    row.append(name,info,actions);
+    row.append(name, info, a);
     list.appendChild(row);
   });
-}
 
-async function deleteStudyMaterial(file){
-  if(!supabaseClient){
-    openAuth();
-    toast("Supabase is not configured");
-    return;
-  }
-
-  const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
-  if(sessionError || !sessionData.session?.user){
-    currentUser=null;
-    updateAuthUI();
-    openAuth();
-    toast("Admin login required to delete files");
-    return;
-  }
-
-  currentUser=sessionData.session.user;
-  if(!confirm(`Delete "${file.file_name}" permanently?`)) return;
-
-  try{
-    const {error:storageError}=await supabaseClient
-      .storage.from(STUDY_BUCKET).remove([file.file_path]);
-
-    if(storageError){
-      console.error("Study file delete error:",storageError);
-      toast("File delete failed: "+storageError.message);
-      return;
-    }
-
-    const {error:dbError}=await supabaseClient
-      .from("study_materials")
-      .delete()
-      .eq("id",file.id);
-
-    if(dbError){
-      console.error("Study material record delete error:",dbError);
-      toast("Database record delete failed: "+dbError.message);
-      return;
-    }
-
-    await loadStudyMaterials();
-    toast("Study material deleted");
-  }catch(error){
-    console.error("Unexpected study material delete error:",error);
-    toast("Delete failed. Check Supabase policies.");
+  if($("studyAdminTools")){
+    $("studyAdminTools").style.display = currentUser ? "block" : "none";
   }
 }
-
-function openStudy(){
-  $("studyModal").classList.add("open");
-  $("studyModal").setAttribute("aria-hidden","false");
-  loadStudyMaterials();
-}
-function closeStudy(){
-  $("studyModal").classList.remove("open");
-  $("studyModal").setAttribute("aria-hidden","true");
-}
+function openStudy(){ $("studyModal").classList.add("open"); $("studyModal").setAttribute("aria-hidden","false"); loadStudyMaterials(); }
+function closeStudy(){ $("studyModal").classList.remove("open"); $("studyModal").setAttribute("aria-hidden","true"); }
 async function uploadStudyMaterial(){
-  if(!supabaseClient){
-    openAuth();
-    toast("Supabase is not configured");
-    return;
-  }
-
-  // Get the current authenticated user directly from Supabase.
-  // This is important because the Storage and table RLS policies use auth.uid().
-  const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
-
-  if(sessionError){
-    console.error("Session check error:", sessionError);
-    toast("Could not verify admin session");
-    return;
-  }
-
-  currentUser = sessionData.session?.user || null;
-
-  if(!currentUser){
+  if(!currentUser || !supabaseClient){
     openAuth();
     toast("Admin login required to upload files");
     return;
   }
 
-  const input = $("studyFileInput");
-  const files = Array.from(input.files || []);
-
+  const files = Array.from($("studyFileInput").files || []);
   if(!files.length){
     toast("Choose one or more files first");
     return;
   }
-
-  // Refresh the session so the JWT used by Storage/PostgREST is current.
-  const { data: refreshData, error: refreshError } =
-    await supabaseClient.auth.refreshSession();
-
-  if(refreshError){
-    console.error("Session refresh error:", refreshError);
-    toast("Admin session expired. Please login again.");
-    return;
-  }
-
-  currentUser = refreshData.session?.user || currentUser;
 
   const uploadButton = $("uploadStudyBtn");
   uploadButton.disabled = true;
@@ -2335,33 +1944,13 @@ async function uploadStudyMaterial(){
 
   let uploaded = 0;
   let failed = 0;
-  const errors = [];
 
   try{
     for(const file of files){
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = `${currentUser.id}/${Date.now()}_${crypto.randomUUID()}_${safeName}`;
 
-      if(!file || file.size <= 0){
-        failed++;
-        errors.push(`${file?.name || "File"}: empty file`);
-        continue;
-      }
-
-      const safeName = file.name
-        .replace(/[^a-zA-Z0-9._-]/g, "_")
-        .replace(/^_+/, "")
-        .slice(0, 180) || "study-file";
-
-      const randomId = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
-
-      // IMPORTANT:
-      // The first folder must be the authenticated user's UUID because
-      // the storage.objects INSERT policy checks:
-      // (storage.foldername(name))[1] = auth.uid()::text
-      const path = `${currentUser.id}/${Date.now()}_${randomId}_${safeName}`;
-
-      const { error: uploadError } = await supabaseClient.storage
+      const {error: uploadError} = await supabaseClient.storage
         .from(STUDY_BUCKET)
         .upload(path, file, {
           upsert: false,
@@ -2372,11 +1961,10 @@ async function uploadStudyMaterial(){
       if(uploadError){
         console.error("Study file upload error:", uploadError);
         failed++;
-        errors.push(`${file.name}: ${uploadError.message || "Storage upload failed"}`);
         continue;
       }
 
-      const { error: dbError } = await supabaseClient
+      const {error: dbError} = await supabaseClient
         .from("study_materials")
         .insert({
           file_name: file.name,
@@ -2387,37 +1975,20 @@ async function uploadStudyMaterial(){
 
       if(dbError){
         console.error("Study material database error:", dbError);
-
-        // If the database insert fails, remove the uploaded Storage object
-        // so an orphaned file is not left behind.
-        const { error: removeError } =
-          await supabaseClient.storage.from(STUDY_BUCKET).remove([path]);
-
-        if(removeError){
-          console.warn("Could not remove orphaned file:", removeError);
-        }
-
+        toast(`Database error: ${dbError.message}`);
         failed++;
-        errors.push(`${file.name}: ${dbError.message || "Database insert failed"}`);
         continue;
       }
 
       uploaded++;
     }
 
-    input.value = "";
+    $("studyFileInput").value = "";
     await loadStudyMaterials();
-
-    if(failed === 0){
-      toast(`${uploaded} file${uploaded === 1 ? "" : "s"} uploaded successfully`);
-    }else{
-      console.error("Study upload failures:", errors);
-      toast(`${uploaded} uploaded, ${failed} failed. Check the browser console for details.`);
-    }
-
+    toast(`${uploaded} file${uploaded === 1 ? "" : "s"} uploaded${failed ? `, ${failed} failed` : " successfully"}`);
   }catch(error){
     console.error("Unexpected study material error:", error);
-    toast("Upload failed. Check Supabase Storage/table policies.");
+    toast("Some files could not be uploaded. Check Supabase settings.");
   }finally{
     uploadButton.disabled = false;
     uploadButton.textContent = "Upload file(s)";
